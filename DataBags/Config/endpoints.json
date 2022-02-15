@@ -1,0 +1,5 @@
+{
+  "generate_token": "https://consentapi.qa.vilpower.in/api/token",
+  "generate_refresh_token": "https://consentapi.qa.vilpower.in/api/token/refresh",
+  "consent_registration": "https://consentapi.qa.vilpower.in/api/consentrequest"
+}
