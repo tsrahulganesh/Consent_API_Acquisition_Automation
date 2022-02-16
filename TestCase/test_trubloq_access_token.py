@@ -81,7 +81,6 @@ def test_invali_username_valid_psw_03():
     #---------------------------------------------------------------------------------------------------------------------------------------
     input_json_dict = json.loads(get_json_from_file("ConsentAPI", "generate_token.json"))
     input_json_dict["api_token"][0].update({"username": "1101635530000002261"})
-    input_json_dict["api_token"][0].update({"password": "mpCN3MafV$NqoK"})
     request_json = json.dumps(input_json_dict["api_token"][0])
     response = post_call(get_endpoint(), request_json, get_headers_without_Authorization())
     print("#######", response.text)
@@ -104,7 +103,6 @@ def test_blank_username_valid_psw_04():
     #---------------------------------------------------------------------------------------------------------------------------------------
     input_json_dict = json.loads(get_json_from_file("ConsentAPI", "generate_token.json"))
     input_json_dict["api_token"][0].update({"username": " "})
-    input_json_dict["api_token"][0].update({"password": "mpCN3MafV$NqoK"})
     request_json = json.dumps(input_json_dict["api_token"][0])
     response = post_call(get_endpoint(), request_json, get_headers_without_Authorization())
     print("#######", response.text)
@@ -126,7 +124,6 @@ def test_valid_username_invalid_psw_05():
     #-----(generated on Telco portal for consent acquisition API)------------------------------------------------------------------------
     #---------------------------------------------------------------------------------------------------------------------------------------
     input_json_dict = json.loads(get_json_from_file("ConsentAPI", "generate_token.json"))
-    input_json_dict["api_token"][0].update({"username": "1101635530000002262"})
     input_json_dict["api_token"][0].update({"password": "mpCN3MafV$Nqoa"})
     request_json = json.dumps(input_json_dict["api_token"][0])
     response = post_call(get_endpoint(), request_json, get_headers_without_Authorization())
@@ -149,7 +146,6 @@ def test_valid_username_blank_psw_06():
     #----(generated on Telco portal for consent acquisition API)------------------------------------------------------------------------
     #---------------------------------------------------------------------------------------------------------------------------------------
     input_json_dict = json.loads(get_json_from_file("ConsentAPI", "generate_token.json"))
-    input_json_dict["api_token"][0].update({"username": "1101635530000002262"})
     input_json_dict["api_token"][0].update({"password": " "})
     request_json = json.dumps(input_json_dict["api_token"][0])
     response = post_call(get_endpoint(), request_json, get_headers_without_Authorization())
@@ -257,3 +253,39 @@ def test_only_valid_psw_10():
     # Parse Response to json format
     response_json = json.loads(response.text)
 
+def test_using_http_GET_PUT_authorization_token_11():
+    #----------------------------------------------------------------------------------------------------------------------------------------
+    #-----"Verify that system returns error status with message for using http methods like GET or PUT for authorization token API."----------
+    #---------------------------------------------------------------------------------------------------------------------------------------
+    #######using_GET_method###########
+    input_json_dict = json.loads(get_json_from_file("ConsentAPI", "generate_token.json"))
+    request_json = json.dumps(input_json_dict["api_token"][0])
+    response = get_call(get_endpoint(), get_headers_without_Authorization())
+    print("####request####", json.dumps(input_json_dict["api_token"][0]))
+    print("###response####", response.text)
+    print(response.status_code)
+    # Validate Response code
+    assert response.status_code == 405
+    response_data = json.loads(response.text)
+    print("Json response ------",response_data)
+    assert response_data["message"] == "Invalid method"
+    # assert response_data["error_response"]["error_message"]
+    # Fetch Header from Response
+    print(response.headers.get("Content-Type"))
+
+    #######using_PUT_method###########
+    response = put_call(get_endpoint(), request_json, get_headers_without_Authorization())
+    print("####request####", json.dumps(input_json_dict["api_token"][0]))
+    print("###response####", response.text)
+    print(response.status_code)
+    # Validate Response code
+    assert response.status_code == 405
+    response_data = json.loads(response.text)
+    print("Json response ------",response_data)
+    assert response_data["message"] == "Invalid method"
+    # assert response_data["error_response"]["error_message"]
+    # Fetch Header from Response
+    print(response.headers.get("Content-Type"))
+
+    # Parse Response to json format
+    response_json = json.loads(response.text)

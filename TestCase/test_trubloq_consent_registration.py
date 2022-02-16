@@ -292,3 +292,203 @@ def test_consent_req_invalid_source_11():
     # Parse Response to json format
     response_json = json.loads(response.text)
 
+def test_consent_register_req_api_faces_internal_error_12():
+    #----------------------------------------------------------------------------------------------------------------------------------------
+    #-----"Verify that system returns error status with message for any valid consent registration request API faces internal error"----------
+    #---------------------------------------------------------------------------------------------------------------------------------------
+    input_json_dict = json.loads(get_json_from_file("ConsentAPI", "consent_registration.json"))
+    input_json_dict["consent_registration"][0]["msisdn"] = "78876949469"
+    request_json = json.dumps(input_json_dict["consent_registration"][0])
+    response = post_call(get_endpoint_consent_registration(), request_json, get_headers_valid_token())
+    print("##url##", get_endpoint_consent_registration())
+    print("#request#", request_json)
+    print("#######", response.text)
+    print(response.status_code)
+    print("#header#", get_headers_valid_token())
+    # Validate Response code
+    assert response.status_code == 500
+    response_data = json.loads(response.text)
+    print("Json response ------",response_data)
+    assert response_data["message"] == "System error"
+    # assert response_data["error_response"]["error_message"]
+    # Fetch Header from Response
+    print(response.headers.get("Content-Type"))
+
+    # Parse Response to json format
+    response_json = json.loads(response.text)
+
+def test_another_consent_register_req_within_1month_13():
+    #----------------------------------------------------------------------------------------------------------------------------------------
+    #-----"Verify that system returns error status with message when user sends another consent registeration request within 1 month from consent acquisition date"----------
+    #---------------------------------------------------------------------------------------------------------------------------------------
+    input_json_dict = json.loads(get_json_from_file("ConsentAPI", "consent_registration.json"))
+    input_json_dict["consent_registration"][0]["msisdn"] = "78876949469"
+    request_json = json.dumps(input_json_dict["consent_registration"][0])
+    response = post_call(get_endpoint_consent_registration(), request_json, get_headers_valid_token())
+    print("##url##", get_endpoint_consent_registration())
+    print("#request#", request_json)
+    print("#######", response.text)
+    print(response.status_code)
+    print("#header#", get_headers_valid_token())
+    # Validate Response code
+    assert response.status_code == 500
+    response_data = json.loads(response.text)
+    print("Json response ------",response_data)
+    assert response_data["message"] == "System error"
+    # assert response_data["error_response"]["error_message"]
+    # Fetch Header from Response
+    print(response.headers.get("Content-Type"))
+
+    # Parse Response to json format
+    response_json = json.loads(response.text)
+
+def test_another_consent_register_req_within_3month_14():
+    #----------------------------------------------------------------------------------------------------------------------------------------
+    #-----"Verify that system returns error status with message when user sends another consent registeration request within 3 months from consent acquisition date"----------
+    #---------------------------------------------------------------------------------------------------------------------------------------
+    input_json_dict = json.loads(get_json_from_file("ConsentAPI", "consent_registration.json"))
+    input_json_dict["consent_registration"][0]["msisdn"] = "78876949469"
+    request_json = json.dumps(input_json_dict["consent_registration"][0])
+    response = post_call(get_endpoint_consent_registration(), request_json, get_headers_valid_token())
+    print("##url##", get_endpoint_consent_registration())
+    print("#request#", request_json)
+    print("#######", response.text)
+    print(response.status_code)
+    print("#header#", get_headers_valid_token())
+    # Validate Response code
+    assert response.status_code == 407
+    response_data = json.loads(response.text)
+    print("Json response ------",response_data)
+    assert response_data["message"] == "Request is not accepted for 3 months from Consent acquisition date"
+    # assert response_data["error_response"]["error_message"]
+    # Fetch Header from Response
+    print(response.headers.get("Content-Type"))
+
+    # Parse Response to json format
+    response_json = json.loads(response.text)
+
+def test_sends_consent_register_req_already_registered_15():
+    #----------------------------------------------------------------------------------------------------------------------------------------
+    #-----"Verify that system returns error status with message when user sends consent registeration request for already registered consent and in revoked state."----------
+    #---------------------------------------------------------------------------------------------------------------------------------------
+    input_json_dict = json.loads(get_json_from_file("ConsentAPI", "consent_registration.json"))
+    input_json_dict["consent_registration"][0]["msisdn"] = "78876949469"
+    request_json = json.dumps(input_json_dict["consent_registration"][0])
+    response = post_call(get_endpoint_consent_registration(), request_json, get_headers_valid_token())
+    print("##url##", get_endpoint_consent_registration())
+    print("#request#", request_json)
+    print("#######", response.text)
+    print(response.status_code)
+    print("#header#", get_headers_valid_token())
+    # Validate Response code
+    assert response.status_code == 408
+    response_data = json.loads(response.text)
+    print("Json response ------",response_data)
+    assert response_data["message"] == "Consent is in revoked state. Kindly ask subscriber to manage consent status on operator app/page "
+    # assert response_data["error_response"]["error_message"]
+    # Fetch Header from Response
+    print(response.headers.get("Content-Type"))
+
+    # Parse Response to json format
+    response_json = json.loads(response.text)
+
+def test_consent_already_registered_for_particular_data_16():
+    #----------------------------------------------------------------------------------------------------------------------------------------
+    #-----"Verify that system returns error status with message for consent acquisition request when consent already exists for a particular MSISDN, Entityid, Constempid and Source."----------
+    #---------------------------------------------------------------------------------------------------------------------------------------
+    input_json_dict = json.loads(get_json_from_file("ConsentAPI", "consent_registration.json"))
+    input_json_dict["consent_registration"][0]["msisdn"] = "78876949469"
+    request_json = json.dumps(input_json_dict["consent_registration"][0])
+    response = post_call(get_endpoint_consent_registration(), request_json, get_headers_valid_token())
+    print("##url##", get_endpoint_consent_registration())
+    print("#request#", request_json)
+    print("#######", response.text)
+    print(response.status_code)
+    print("#header#", get_headers_valid_token())
+    # Validate Response code
+    assert response.status_code == 409
+    response_data = json.loads(response.text)
+    print("Json response ------",response_data)
+    assert response_data["message"] ==  "Consent already exists"
+    # assert response_data["error_response"]["error_message"]
+    # Fetch Header from Response
+    print(response.headers.get("Content-Type"))
+
+    # Parse Response to json format
+    response_json = json.loads(response.text)
+
+def test_providing_entityid_inactive_account_17():
+    #----------------------------------------------------------------------------------------------------------------------------------------
+    #-----"Verify that system returns error status with message for providing entityid of an inactive account"----------
+    #---------------------------------------------------------------------------------------------------------------------------------------
+    input_json_dict = json.loads(get_json_from_file("ConsentAPI", "consent_registration.json"))
+    input_json_dict["consent_registration"][0]["msisdn"] = "78876949469"
+    request_json = json.dumps(input_json_dict["consent_registration"][0])
+    response = post_call(get_endpoint_consent_registration(), request_json, get_headers_valid_token())
+    print("##url##", get_endpoint_consent_registration())
+    print("#request#", request_json)
+    print("#######", response.text)
+    print(response.status_code)
+    print("#header#", get_headers_valid_token())
+    # Validate Response code
+    assert response.status_code == 503
+    response_data = json.loads(response.text)
+    print("Json response ------",response_data)
+    assert response_data["message"] == "Peid not active"
+    # assert response_data["error_response"]["error_message"]
+    # Fetch Header from Response
+    print(response.headers.get("Content-Type"))
+
+    # Parse Response to json format
+    response_json = json.loads(response.text)
+
+def test_using_http_GET_PUT_consent_registration_api_18():
+    #----------------------------------------------------------------------------------------------------------------------------------------
+    #-----"Verify that system returns error status with message for using http methods like GET or PUT for consent registeration request API."----------
+    #---------------------------------------------------------------------------------------------------------------------------------------
+    input_json_dict = json.loads(get_json_from_file("ConsentAPI", "consent_registration.json"))
+    input_json_dict["consent_registration"][0]["msisdn"] = "78876949469"
+    request_json = json.dumps(input_json_dict["consent_registration"][0])
+    response = post_call(get_endpoint_consent_registration(), request_json, get_headers_valid_token())
+    print("##url##", get_endpoint_consent_registration())
+    print("#request#", request_json)
+    print("#######", response.text)
+    print(response.status_code)
+    print("#header#", get_headers_valid_token())
+    # Validate Response code
+    assert response.status_code == 405
+    response_data = json.loads(response.text)
+    print("Json response ------",response_data)
+    assert response_data["message"] == "Invalid method"
+    # assert response_data["error_response"]["error_message"]
+    # Fetch Header from Response
+    print(response.headers.get("Content-Type"))
+
+    # Parse Response to json format
+    response_json = json.loads(response.text)
+
+def test_duplicate_consent_registration_req_19():
+    #----------------------------------------------------------------------------------------------------------------------------------------
+    #-----"Verify that system returns error status with message for sending another duplicate consent registeration request-----------------
+    #----when the last request is in initiated state and still in pending state as subscriber has not accepted or rejected the consent."----------
+    #---------------------------------------------------------------------------------------------------------------------------------------
+    input_json_dict = json.loads(get_json_from_file("ConsentAPI", "consent_registration.json"))
+    input_json_dict["consent_registration"][0]["msisdn"] = "78876949469"
+    request_json = json.dumps(input_json_dict["consent_registration"][0])
+    response = post_call(get_endpoint_consent_registration(), request_json, get_headers_valid_token())
+    print("##url##", get_endpoint_consent_registration())
+    print("#request#", request_json)
+    print("#######", response.text)
+    print(response.status_code)
+    print("#header#", get_headers_valid_token())
+    # Validate Response code
+    assert response.status_code == 406
+    response_data = json.loads(response.text)
+    print("Json response ------",response_data)
+    assert response_data["message"] == "Duplicate request - Initiated status"
+    # assert response_data["error_response"]["error_message"]
+    # Fetch Header from Response
+    print(response.headers.get("Content-Type"))
+
+    # Parse Response to json format
+    response_json = json.loads(response.text)

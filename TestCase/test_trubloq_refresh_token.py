@@ -83,3 +83,31 @@ def test_providing_blank_refresh_token_03():
 
     # Parse Response to json format
     response_json = json.loads(response.text)
+
+def test_using_http_GET_PUT_refresh_token_04():
+    #----------------------------------------------------------------------------------------------------------------------------------------
+    #-----"Verify that system returns error status with message for using http methods like GET or PUT for refresh token API."----------
+    #---------------------------------------------------------------------------------------------------------------------------------------
+    input_json_dict = json.loads(get_json_from_file("ConsentAPI", "generate_refresh_token.json"))
+    input_json_dict["api_refresh_token"][0]["refresh"] = " "
+    request_json = json.dumps(input_json_dict["api_refresh_token"][0])
+    response = post_call(get_endpoint_refresh_token(), request_json, get_headers_without_Authorization())
+    print("##url##", get_endpoint_refresh_token())
+    print("#request#", request_json)
+    print("#######", response.text)
+    print(response.status_code)
+    # Validate Response code
+    assert response.status_code == 405
+    response_data = json.loads(response.text)
+    print("Json response ------",response_data)
+    assert response_data["message"] == "Invalid method"
+    # assert response_data["error_response"]["error_message"]
+    # Fetch Header from Response
+    print(response.headers.get("Content-Type"))
+
+    # Parse Response to json format
+    response_json = json.loads(response.text)
+
+
+
+
