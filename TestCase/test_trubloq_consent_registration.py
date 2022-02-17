@@ -492,3 +492,53 @@ def test_duplicate_consent_registration_req_19():
 
     # Parse Response to json format
     response_json = json.loads(response.text)
+
+def test_with_IP_not_whitelisted_20():
+    # ----------------------------------------------------------------------------------------------------------------------------------------
+    # -----Verify that system returns error status with message when user try to register consents from system whose IP is not whitelisted----------
+    # ---------------------------------------------------------------------------------------------------------------------------------------
+    input_json_dict = json.loads(get_json_from_file("ConsentAPI", "consent_registration.json"))
+    request_json = json.dumps(input_json_dict["consent_registration"][0])
+    response = post_call(get_endpoint_consent_registration(), request_json, get_headers_valid_token())
+    print("##url##", get_endpoint_consent_registration())
+    print("#request#", request_json)
+    print("#######", response.text)
+    print(response.status_code)
+    print("#header#", get_headers_valid_token())
+    # Validate Response code
+    assert response.status_code == 506
+    response_data = json.loads(response.text)
+    print("Json response ------", response_data)
+    assert response_data["message"] == "IP not whitelisted"
+    # assert response_data["error_response"]["error_message"]
+    # Fetch Header from Response
+    print(response.headers.get("Content-Type"))
+
+    # Parse Response to json format
+    response_json = json.loads(response.text)
+
+def test_consent_registration_with_diff_entityid_21():
+    # -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    # -----Verify that system returns error status with message when authorization token is generated for a ----------------------------------------------------------------------------------------
+    # -------particular entityid but consent registeration request created for a different entityid---------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    input_json_dict = json.loads(get_json_from_file("ConsentAPI", "consent_registration.json"))
+    request_json = json.dumps(input_json_dict["consent_registration"][0])
+    response = post_call(get_endpoint_consent_registration(), request_json, get_headers_valid_token())
+    input_json_dict["consent_registration"][0]["entityid"] = "1101635530000002261"
+    print("##url##", get_endpoint_consent_registration())
+    print("#request#", request_json)
+    print("#######", response.text)
+    print(response.status_code)
+    print("#header#", get_headers_valid_token())
+    # Validate Response code
+    assert response.status_code == 507
+    response_data = json.loads(response.text)
+    print("Json response ------", response_data)
+    assert response_data["message"] == "Peid mismatch"
+    # assert response_data["error_response"]["error_message"]
+    # Fetch Header from Response
+    print(response.headers.get("Content-Type"))
+
+    # Parse Response to json format
+    response_json = json.loads(response.text)
