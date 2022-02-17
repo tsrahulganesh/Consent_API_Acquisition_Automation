@@ -206,9 +206,9 @@ def test_consent_req_invalid_msisdn_08():
     #----Verify that system returns error status with message for providing invalid MSISDN (MSISDN not starting with '6/7/8/9')--------------
     #----------------------------------------------------------------------------------------------------------------------------------------
     #----------------------------------------------------------------------------------------------------------------------------------------
-    input_json_dict = json.loads(get_json_from_file("ConsentAPI", "consent_request.json"))
-    input_json_dict["consent_request"][0].update({"msisdn": "2887694946"})
-    request_json = json.dumps(input_json_dict["consent_request"][0])
+    input_json_dict = json.loads(get_json_from_file("ConsentAPI", "consent_registration.json"))
+    input_json_dict["consent_registration"][0].update({"msisdn": "2887694946"})
+    request_json = json.dumps(input_json_dict["consent_registration"][0])
     response = post_call(get_endpoint_consent_registration(), request_json, get_headers_valid_token())
     print("#######", response.text)
     # Validate Response code
@@ -229,9 +229,9 @@ def test_consent_req_invalid_entityid_09():
     #-----Verify that system returns error status with message for providing invalid entityid-----------------------------------------------
     #---------------------------------------------------------------------------------------------------------------------------------------
     #---------------------------------------------------------------------------------------------------------------------------------------
-    input_json_dict = json.loads(get_json_from_file("ConsentAPI", "consent_request.json"))
-    input_json_dict["consent_request"][0].update({"entityid": "110163553000000226245"})
-    request_json = json.dumps(input_json_dict["consent_request"][0])
+    input_json_dict = json.loads(get_json_from_file("ConsentAPI", "consent_registration.json"))
+    input_json_dict["consent_registration"][0].update({"entityid": "110163553000000226245"})
+    request_json = json.dumps(input_json_dict["consent_registration"][0])
     response = post_call(get_endpoint_consent_registration(), request_json, get_headers_valid_token())
     print("#######", response.text)
     # Validate Response code
@@ -251,9 +251,9 @@ def test_consent_req_invalid_constempid_10():
     #----------Verify that system returns error status with message for providing invalid constempid-----------------------------------------
     #----------------------------------------------------------------------------------------------------------------------------------------
     #---------------------------------------------------------------------------------------------------------------------------------------
-    input_json_dict = json.loads(get_json_from_file("ConsentAPI", "consent_request.json"))
-    input_json_dict["consent_request"][0].update({"constempid": "110816443885823281345"})
-    request_json = json.dumps(input_json_dict["consent_request"][0])
+    input_json_dict = json.loads(get_json_from_file("ConsentAPI", "consent_registration.json"))
+    input_json_dict["consent_registration"][0].update({"constempid": "110816443885823281345"})
+    request_json = json.dumps(input_json_dict["consent_registration"][0])
     response = post_call(get_endpoint_consent_registration(), request_json, get_headers_valid_token())
     print("#######", response.text)
     # Validate Response code
@@ -274,9 +274,9 @@ def test_consent_req_invalid_source_11():
     #----------Verify that system returns error status with message for providing invalid source-----------------------------------------
     #----------------------------------------------------------------------------------------------------------------------------------------
     #---------------------------------------------------------------------------------------------------------------------------------------
-    input_json_dict = json.loads(get_json_from_file("ConsentAPI", "consent_request.json"))
-    input_json_dict["consent_request"][0].update({"source": "8"})
-    request_json = json.dumps(input_json_dict["consent_request"][0])
+    input_json_dict = json.loads(get_json_from_file("ConsentAPI", "consent_registration.json"))
+    input_json_dict["consent_registration"][0].update({"source": "8"})
+    request_json = json.dumps(input_json_dict["consent_registration"][0])
     response = post_call(get_endpoint_consent_registration(), request_json, get_headers_valid_token())
     print("#######", response.text)
     # Validate Response code
@@ -297,7 +297,7 @@ def test_consent_register_req_api_faces_internal_error_12():
     #-----"Verify that system returns error status with message for any valid consent registration request API faces internal error"----------
     #---------------------------------------------------------------------------------------------------------------------------------------
     input_json_dict = json.loads(get_json_from_file("ConsentAPI", "consent_registration.json"))
-    input_json_dict["consent_registration"][0]["msisdn"] = "78876949469"
+    # input_json_dict["consent_registration"][0]["msisdn"] = "78876949469"
     request_json = json.dumps(input_json_dict["consent_registration"][0])
     response = post_call(get_endpoint_consent_registration(), request_json, get_headers_valid_token())
     print("##url##", get_endpoint_consent_registration())

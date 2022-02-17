@@ -21,7 +21,6 @@ def test_gen_tok_valid_cred_01():
     #---------------------------------------------------------------------------------------------------------------------------------------
     input_json_dict = json.loads(get_json_from_file("ConsentAPI", "generate_token.json"))
     request_json = json.dumps(input_json_dict["api_token"][0])
-
     response = post_call(get_endpoint(), request_json, get_headers_without_Authorization())
     print("#######", response.text)
     # Validate Response code
@@ -49,7 +48,7 @@ def test_gen_tok_valid_cred_01():
     # validate_field_mandatory_error(response_json, "destinationFolder")
     # validate_field_mandatory_error(response_json, "isAlert")
     # validate_field_mandatory_error(response_json, "subAccountPassword")
-    #
+
 
 def test_invalid_cred_02():
     #----------------------------------------------------------------------------------------------------------------------------------------

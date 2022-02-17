@@ -130,6 +130,8 @@ def validate_expired_token(response_dict):
     assert response_dict["messages"] == "Expired signature"
     #assert response_dict["data"] == "Opps! Internal server error"
 
+def validate_success_callback(response_dict):
+    assert response_dict["message"] == "Success"
 
 
 
