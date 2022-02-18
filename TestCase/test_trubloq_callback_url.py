@@ -271,5 +271,44 @@ def test_callback_url_blank_MSISDN_11():
     assert response.status_code == 200
     response_data = json.loads(response.text)
     print("Json response ------", response_data)
-    assert response_data["message"] == "Invalid msisdn"
-    assert response_data["status"] == 501
+    assert response_data["message"] == "Success"
+
+
+def test_callback_url_blank_uts_18():
+    #----------------------------------------------------------------------------------------------------------------------------------------------------
+    #-------------Verify that the system sends callback url request to retry queue when DLT platform sends the consent-----------------------------------
+    #-----------------------acquisition status to call back URL mentioned in DLT portal for blank uts--------------------------------------------------
+    #----------------------------------------------------------------------------------------------------------------------------------------------------
+    input_json_dict = json.loads(get_json_from_file("ConsentAPI", "callback_url.json"))
+    input_json_dict["callback_url"][0].update({"uts": " "})
+    request_json = json.dumps(input_json_dict["callback_url"][0])
+    response = post_call(get_endpoint_callback_url(), request_json, get_headers_valid_token())
+    print("##url##", get_endpoint_callback_url())
+    print("#request#", request_json)
+    print("#######", response.text)
+    print(response.status_code)
+    # Validate Response code
+    assert response.status_code == 200
+    response_data = json.loads(response.text)
+    print("Json response ------", response_data)
+    assert response_data["message"] == "Success"
+
+
+def test_callback_url_blank_source_19():
+    #----------------------------------------------------------------------------------------------------------------------------------------------------
+    #-------------Verify that the system sends callback url request to retry queue when DLT platform sends the consent-----------------------------------
+    #-----------------------acquisition status to call back URL mentioned in DLT portal for blank source--------------------------------------------------
+    #----------------------------------------------------------------------------------------------------------------------------------------------------
+    input_json_dict = json.loads(get_json_from_file("ConsentAPI", "callback_url.json"))
+    input_json_dict["callback_url"][0].update({"source": " "})
+    request_json = json.dumps(input_json_dict["callback_url"][0])
+    response = post_call(get_endpoint_callback_url(), request_json, get_headers_valid_token())
+    print("##url##", get_endpoint_callback_url())
+    print("#request#", request_json)
+    print("#######", response.text)
+    print(response.status_code)
+    # Validate Response code
+    assert response.status_code == 200
+    response_data = json.loads(response.text)
+    print("Json response ------", response_data)
+    assert response_data["message"] == "Success"
