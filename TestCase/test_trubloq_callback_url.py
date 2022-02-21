@@ -650,7 +650,6 @@ def test_callback_url_only_source_37():
     # Assert Mandatory Field level validation errors
     validate_success_callback(response_data)
 
-
 def test_callback_url_only_status_38():
 
     # ----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -679,3 +678,55 @@ def test_callback_url_only_status_38():
     print(response.headers.get("Content-Type"))
     # Assert Mandatory Field level validation errors
     validate_success_callback(response_data)
+
+def test_callback_url_only_expiredt_39():
+    # ----------------------------------------------------------------------------------------------------------------------------------------------------
+    # ----"Verify that the system sends callback url request to retry queue when DLT platform sends the consent acquisition status
+    # ----------------to call back URL mentioned in DLT portal for providing only expirydt parameter in payload"-------------------------------------------
+    # --------------------------------------------------------------------------------------------------------------------------------------------------
+
+    input_json_dict = json.loads(get_json_from_file("ConsentAPI", "callback_url.json"))
+    # clear the all payload data
+    request_data = json.dumps(input_json_dict.clear())
+    print("request_data", request_data)
+    # add STATUS parameter in payload
+    input_json_dict['expirydt'] = "10-01-2024 13:45:24"
+    request_json = json.dumps(input_json_dict)
+    response = post_call(get_endpoint_callback_url(), request_json, get_headers_valid_token())
+    print("##url##", get_endpoint_callback_url())
+    print("#request#", request_json)
+    print("#######", response.text)
+    print(response.status_code)
+    # Validate Response code
+    assert response.status_code == 502
+    response_data = json.loads(response.text)
+    print("Json response ------", response_data)
+    assert response_data["message"] == "msisdn is required"
+    # Fetch Header from Response
+    print(response.headers.get("Content-Type"))
+
+def test_callback_url_ACCEPTED_no_expiredt_40():
+    # ----------------------------------------------------------------------------------------------------------------------------------------------------
+    # ----Verify that the system sends callback url request to retry queue when DLT platform sends the consent------------------------------------------
+    # ---------acquisition status "ACCEPTED"  to call back URL mentioned in DLT portal for not providing------------------------------------------------
+    # ----------------------------------expirydt parameter in payload-----------------------------------------------------------------------------------
+    # --------------------------------------------------------------------------------------------------------------------------------------------------
+
+    input_json_dict = json.loads(get_json_from_file("ConsentAPI", "callback_url.json"))
+    # clear the all payload data
+    request_data = json.dumps(input_json_dict.clear())
+    print("request_data", request_data)
+    input_json_dict["callback_url"][0].update({"status": "ACCEPTED"})
+    request_json = json.dumps(input_json_dict)
+    response = post_call(get_endpoint_callback_url(), request_json, get_headers_valid_token())
+    print("##url##", get_endpoint_callback_url())
+    print("#request#", request_json)
+    print("#######", response.text)
+    print(response.status_code)
+    # Validate Response code
+    assert response.status_code == 200
+    response_data = json.loads(response.text)
+    print("Json response ------", response_data)
+    assert response_data["message"] == "Success"
+    # Fetch Header from Response
+    print(response.headers.get("Content-Type"))
