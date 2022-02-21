@@ -273,6 +273,8 @@ def test_using_http_GET_PUT_authorization_token_11():
     print(response.headers.get("Content-Type"))
 
     #######using_PUT_method###########
+    input_json_dict = json.loads(get_json_from_file("ConsentAPI", "generate_token.json"))
+    request_json = json.dumps(input_json_dict["api_token"][0])
     response = put_call(get_endpoint(), request_json, get_headers_without_Authorization())
     print("####request####", json.dumps(input_json_dict["api_token"][0]))
     print("###response####", response.text)
