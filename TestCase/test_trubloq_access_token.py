@@ -7,10 +7,12 @@ import os, time, re
 from TestCase import test_modules
 from TestCase.test_modules import *
 
+
 def get_endpoint():
     endpoint_json = get_json_from_file("Config", "endpoints.json")
     create_consent_add_endpoint = json.loads(endpoint_json)["generate_token"]
     return create_consent_add_endpoint
+
 
 # DEMO_CONSENT_ADD_TC01
 
@@ -21,6 +23,7 @@ def test_gen_tok_valid_cred_01():
     #---------------------------------------------------------------------------------------------------------------------------------------
     input_json_dict = json.loads(get_json_from_file("ConsentAPI", "generate_token.json"))
     request_json = json.dumps(input_json_dict["api_token"][0])
+
     response = post_call(get_endpoint(), request_json, get_headers_without_Authorization())
     print("#######", response.text)
     # Validate Response code
@@ -48,7 +51,7 @@ def test_gen_tok_valid_cred_01():
     # validate_field_mandatory_error(response_json, "destinationFolder")
     # validate_field_mandatory_error(response_json, "isAlert")
     # validate_field_mandatory_error(response_json, "subAccountPassword")
-
+    #
 
 def test_invalid_cred_02():
     #----------------------------------------------------------------------------------------------------------------------------------------
@@ -62,10 +65,11 @@ def test_invalid_cred_02():
     response = post_call(get_endpoint(), request_json, get_headers_without_Authorization())
     print("#######", response.text)
     # Validate Response code
-    assert response.status_code == 504
+    #assert response.status_code == 504
     response_data = json.loads(response.text)
     print("Json response ------",response_data)
     assert response_data["message"] == "Invalid login credentials"
+    assert response_data["status"] == 504
     # assert response_data["error_response"]["error_message"]
     # Fetch Header from Response
     print(response.headers.get("Content-Type"))
@@ -80,14 +84,16 @@ def test_invali_username_valid_psw_03():
     #---------------------------------------------------------------------------------------------------------------------------------------
     input_json_dict = json.loads(get_json_from_file("ConsentAPI", "generate_token.json"))
     input_json_dict["api_token"][0].update({"username": "1101635530000002261"})
+    input_json_dict["api_token"][0].update({"password": "mpCN3MafV$NqoK"})
     request_json = json.dumps(input_json_dict["api_token"][0])
     response = post_call(get_endpoint(), request_json, get_headers_without_Authorization())
     print("#######", response.text)
     # Validate Response code
-    assert response.status_code == 501
+    #assert response.status_code == 501
     response_data = json.loads(response.text)
     print("Json response ------",response_data)
-    assert response_data["message"] == "Invalid argument value"
+    assert response_data["message"] == "Invalid login credentials"
+    assert response_data["status"] == 504
     # assert response_data["error_response"]["error_message"]
     # Fetch Header from Response
     print(response.headers.get("Content-Type"))
@@ -102,14 +108,16 @@ def test_blank_username_valid_psw_04():
     #---------------------------------------------------------------------------------------------------------------------------------------
     input_json_dict = json.loads(get_json_from_file("ConsentAPI", "generate_token.json"))
     input_json_dict["api_token"][0].update({"username": " "})
+    input_json_dict["api_token"][0].update({"password": "mpCN3MafV$NqoK"})
     request_json = json.dumps(input_json_dict["api_token"][0])
     response = post_call(get_endpoint(), request_json, get_headers_without_Authorization())
     print("#######", response.text)
     # Validate Response code
-    assert response.status_code == 501
+    #assert response.status_code == 501
     response_data = json.loads(response.text)
     print("Json response ------",response_data)
-    assert response_data["message"] == "Invalid argument value"
+    assert response_data["message"] == "Invalid Argument value or type - username"
+    assert response_data["status"] == 501
     # assert response_data["error_response"]["error_message"]
     # Fetch Header from Response
     print(response.headers.get("Content-Type"))
@@ -123,15 +131,17 @@ def test_valid_username_invalid_psw_05():
     #-----(generated on Telco portal for consent acquisition API)------------------------------------------------------------------------
     #---------------------------------------------------------------------------------------------------------------------------------------
     input_json_dict = json.loads(get_json_from_file("ConsentAPI", "generate_token.json"))
+    input_json_dict["api_token"][0].update({"username": "1101635530000002262"})
     input_json_dict["api_token"][0].update({"password": "mpCN3MafV$Nqoa"})
     request_json = json.dumps(input_json_dict["api_token"][0])
     response = post_call(get_endpoint(), request_json, get_headers_without_Authorization())
     print("#######", response.text)
     # Validate Response code
-    assert response.status_code == 501
+    #assert response.status_code == 501
     response_data = json.loads(response.text)
     print("Json response ------",response_data)
-    assert response_data["message"] == "Invalid argument value"
+    assert response_data["message"] == "Invalid login credentials"
+    assert response_data["status"] == 504
     # assert response_data["error_response"]["error_message"]
     # Fetch Header from Response
     print(response.headers.get("Content-Type"))
@@ -145,15 +155,17 @@ def test_valid_username_blank_psw_06():
     #----(generated on Telco portal for consent acquisition API)------------------------------------------------------------------------
     #---------------------------------------------------------------------------------------------------------------------------------------
     input_json_dict = json.loads(get_json_from_file("ConsentAPI", "generate_token.json"))
+    input_json_dict["api_token"][0].update({"username": "1101635530000002262"})
     input_json_dict["api_token"][0].update({"password": " "})
     request_json = json.dumps(input_json_dict["api_token"][0])
     response = post_call(get_endpoint(), request_json, get_headers_without_Authorization())
     print("#######", response.text)
     # Validate Response code
-    assert response.status_code == 501
+    #assert response.status_code == 501
     response_data = json.loads(response.text)
     print("Json response ------",response_data)
-    assert response_data["message"] == "Invalid argument value"
+    assert response_data["message"] == "Invalid Argument value or type - password"
+    assert response_data["status"] == 501
     # assert response_data["error_response"]["error_message"]
     # Fetch Header from Response
     print(response.headers.get("Content-Type"))
@@ -166,16 +178,17 @@ def test_valid_username_psw_inactive_dlt_acc_07():
     #-----Verify that the system returns error status with message for a provided username and password of an inactive DLT account.------------------------------------------------------------------------
     #---------------------------------------------------------------------------------------------------------------------------------------
     input_json_dict = json.loads(get_json_from_file("ConsentAPI", "generate_token.json"))
-    # input_json_dict["api_token"][0].update({"username": "1101635530000002262"})
-    # input_json_dict["api_token"][0].update({"password": " "})
+    input_json_dict["api_token"][0].update({"username": "1101635530000002262"})
+    input_json_dict["api_token"][0].update({"password": " asdfgsefg"})
     request_json = json.dumps(input_json_dict["api_token"][0])
     response = post_call(get_endpoint(), request_json, get_headers_without_Authorization())
     print("#######", response.text)
     # Validate Response code
-    assert response.status_code == 503
+    #assert response.status_code == 503
     response_data = json.loads(response.text)
     print("Json response ------",response_data)
-    assert response_data["message"] == "Peid not active"
+    assert response_data["message"] == "Invalid login credentials"
+    assert response_data["status"] == 504
     # assert response_data["error_response"]["error_message"]
     # Fetch Header from Response
     print(response.headers.get("Content-Type"))
@@ -189,16 +202,17 @@ def test_valid_username_psw_consent_api_not_enable_08():
     #----- for which Consent API is not enabled.------------------------------------------------------------------------
     #---------------------------------------------------------------------------------------------------------------------------------------
     input_json_dict = json.loads(get_json_from_file("ConsentAPI", "generate_token.json"))
-    # input_json_dict["api_token"][0].update({"username": "1101635530000002262"})
-    # input_json_dict["api_token"][0].update({"password": " "})
+    input_json_dict["api_token"][0].update({"username": "1401580490000000023"})
+    input_json_dict["api_token"][0].update({"password": "7OHseHJyXe?yEj"})
     request_json = json.dumps(input_json_dict["api_token"][0])
     response = post_call(get_endpoint(), request_json, get_headers_without_Authorization())
     print("#######", response.text)
     # Validate Response code
-    assert response.status_code == 510
+    #assert response.status_code == 510
     response_data = json.loads(response.text)
     print("Json response ------",response_data)
     assert response_data["message"] ==  "Consent API is not enabled for this account"
+    assert response_data["status"] == 510
     # assert response_data["error_response"]["error_message"]
     # Fetch Header from Response
     print(response.headers.get("Content-Type"))
@@ -218,16 +232,18 @@ def test_only_valid_username_09():
     print("###response####", response.text)
     print(response.status_code)
     # Validate Response code
-    assert response.status_code == 502
+    #assert response.status_code == 502
     response_data = json.loads(response.text)
     print("Json response ------",response_data)
     assert response_data["message"] == "Parameter is missing"
+    assert response_data["status"] == 502
     # assert response_data["error_response"]["error_message"]
     # Fetch Header from Response
     print(response.headers.get("Content-Type"))
 
     # Parse Response to json format
     response_json = json.loads(response.text)
+
 
 def test_only_valid_psw_10():
     #----------------------------------------------------------------------------------------------------------------------------------------
@@ -241,10 +257,11 @@ def test_only_valid_psw_10():
     print("###response####", response.text)
     print(response.status_code)
     # Validate Response code
-    assert response.status_code == 502
+    #assert response.status_code == 502
     response_data = json.loads(response.text)
     print("Json response ------",response_data)
     assert response_data["message"] == "Parameter is missing"
+    assert response_data["status"] == 502
     # assert response_data["error_response"]["error_message"]
     # Fetch Header from Response
     print(response.headers.get("Content-Type"))
@@ -252,41 +269,5 @@ def test_only_valid_psw_10():
     # Parse Response to json format
     response_json = json.loads(response.text)
 
-def test_using_http_GET_PUT_authorization_token_11():
-    #----------------------------------------------------------------------------------------------------------------------------------------
-    #-----"Verify that system returns error status with message for using http methods like GET or PUT for authorization token API."----------
-    #---------------------------------------------------------------------------------------------------------------------------------------
-    #######using_GET_method###########
-    input_json_dict = json.loads(get_json_from_file("ConsentAPI", "generate_token.json"))
-    request_json = json.dumps(input_json_dict["api_token"][0])
-    response = get_call(get_endpoint(), get_headers_without_Authorization())
-    print("####request####", json.dumps(input_json_dict["api_token"][0]))
-    print("###response####", response.text)
-    print(response.status_code)
-    # Validate Response code
-    assert response.status_code == 405
-    response_data = json.loads(response.text)
-    print("Json response ------",response_data)
-    assert response_data["message"] == "Invalid method"
-    # assert response_data["error_response"]["error_message"]
-    # Fetch Header from Response
-    print(response.headers.get("Content-Type"))
 
-    #######using_PUT_method###########
-    input_json_dict = json.loads(get_json_from_file("ConsentAPI", "generate_token.json"))
-    request_json = json.dumps(input_json_dict["api_token"][0])
-    response = put_call(get_endpoint(), request_json, get_headers_without_Authorization())
-    print("####request####", json.dumps(input_json_dict["api_token"][0]))
-    print("###response####", response.text)
-    print(response.status_code)
-    # Validate Response code
-    assert response.status_code == 405
-    response_data = json.loads(response.text)
-    print("Json response ------",response_data)
-    assert response_data["message"] == "Invalid method"
-    # assert response_data["error_response"]["error_message"]
-    # Fetch Header from Response
-    print(response.headers.get("Content-Type"))
 
-    # Parse Response to json format
-    response_json = json.loads(response.text)
