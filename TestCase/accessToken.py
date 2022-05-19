@@ -59,7 +59,7 @@ def access_key_expired():
 
 def test_create_rule():
     url = "https://nldpreprodapim.tanla.com/portal/ftp/"
-    access_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ3NjkzNDI2LCJqdGkiOiIxYzYyNzUyZTdlMGI0MzFjOWUxNTA2ZjNjOTgyNzM1ZSIsInVzZXJfaWQiOjM4LCJlbnRpdHlpZCI6IjE0MDE1ODA0OTAwMDAwMDAwMjMifQ.BrQPzpjoKvfm4S3GYgikEAB5Zho8UATVcGbHymyLDC8"
+    access_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjUzMDIwNzMzLCJqdGkiOiI5ZDFkZjkyZGZkZTE0OWUxOTViZGZlYTRlZjkxZmYwZiIsInVzZXJfaWQiOjE5LCJlbnRpdHlpZCI6IjE1MDEzMjcxOTAwMDAwMDAwMDcifQ.cY8TNYiQ8z8uFhSmVTjgWTem3-7aezsu7_Xu4IUOO0g"
     request_json = get_request_json()
     custom_hdrs = {
         "User-Agent": "PostmanRuntime/7.28.4",
